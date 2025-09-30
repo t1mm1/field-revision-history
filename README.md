@@ -11,7 +11,7 @@ including who changed it and when, and allows restoring a specific past value di
 - See when a field changed, who changed it, and what the current value is
 - One-click “Restore value” to inject a past value into the current edit form (no full node revert)
 - Quick links for “View revision” and “Revert revision” alongside each historical record
-- Noise reduction: empty and duplicate values are hidden by default; toggle with “Expand hidden values”
+- Noise reduction: duplicate values are hidden by default; toggle with “Expand hidden values”
 - Granular configuration:
   - Enable globally, disable for specific content types
   - Choose exactly which fields the feature applies to per content type
