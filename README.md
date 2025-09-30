@@ -56,6 +56,7 @@ Install this module using the standard Drupal module installation process.
 Settings form:
 
 **Administration → Configuration → Content authoring → Field Revision History**
+
 ```
 /admin/config/content/field-revision-history
 ```
@@ -124,8 +125,8 @@ The link does not appear:
 
 ### Known limitations
 Nodes only (for now).
-- Very large revision histories may impact modal load time; consider editorial policies to limit excessive revisions.
-- Sensitive data: the modal can expose past values; ensure roles and permissions reflect your compliance needs.
+- Very large revision histories may impact modal load time; consider editorial policies to limit excessive revisions
+- Sensitive data: the modal can expose past values; ensure roles and permissions reflect your compliance needs
 
 ### Compatibility and updates
 Supported: Drupal core 11.x.
