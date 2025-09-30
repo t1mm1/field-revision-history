@@ -5,7 +5,7 @@ without reverting the entire node. It adds a “View or restore a past value” 
 node edit forms. Clicking the link opens a modal with the field’s full value history,
 including who changed it and when, and allows restoring a specific past value directly into the edit form.
 
-### Key features
+## Key features
 
 - Per-field history modal on node edit forms (for revisionable content types)
 - See when a field changed, who changed it, and what the current value is
@@ -18,28 +18,28 @@ including who changed it and when, and allows restoring a specific past value di
 - Access control integrates with core revision permissions plus a dedicated admin permission
 - The title field is also supported
 
-### Examples
+## Examples
 
-#### Before changes
+### Before changes
 
 <img src="assets/edit_form_before.png" alt="Edit form before changes">
 
-#### After changes
+### After changes
 <img src="assets/edit_form_after.png" alt="Edit form before changes">
 
-#### Some additional screens
+### Some additional examples
 
 Modal with a condensed list where empty/duplicate values are hidden and “Expand hidden values” is shown:
 
 <img src="assets/field_title_with_hidden_values.png" alt="Title field">
-<img src="assets/field_images_with_hidden_values.png" alt="Title field">
+<img src="assets/field_images_with_hidden_values.png" alt="Images field">
 
 Modal expanded showing all historical values (including previously hidden entries):
 
 <img src="assets/field_images_without_hidden_values.png" alt="Title field">
-<img src="assets/field_title_without_hidden_values.png" alt="Title field">
+<img src="assets/field_title_without_hidden_values.png" alt="Images field">
 
-### Requirements
+## Requirements
 
 - Drupal core 11.x
 - Node entities with revisions enabled (per content type)
@@ -51,7 +51,7 @@ Note: The module is implemented following Drupal best practices and can be porte
 
 Install this module using the standard Drupal module installation process.
 
-### Configuration
+## Configuration
 
 Settings form:
 
@@ -72,7 +72,7 @@ You can configure:
 
 **Structure → Content types → Edit your content type → “Create new revision” is checked.**
 
-### Permissions
+## Permissions
 
 The module relies on Drupal core’s revision permissions to gate access to history and revision actions:
 
@@ -81,9 +81,9 @@ The module relies on Drupal core’s revision permissions to gate access to hist
 
 Additional module-specific permission:
 
-- administer field revision history configuration — allows access to the module’s settings page.
+- administer field revision history configuration — allows access to the module’s settings page
 
-### Usage
+## Usage
 
 - Open a node edit form for a content type that has revisions enabled
 - Locate a configured field; you’ll see a link “View or restore”
@@ -100,19 +100,19 @@ Notes:
   - Your role may lack the necessary revision permissions.
   - The module or field may be disabled in the module’s settings for that content type.
 
-### How it works (high level)
+## How it works
 
 - The module augments node edit forms via form alters for supported fields
 - A modal (AJAX-powered) lists past values by traversing the node’s revision history for the specific field
 - “Restore value” uses safe form-state manipulation and client-side updates to populate the current form without changing the saved revision until you submit
 - “View revision” and “Revert revision” link to core revision routes; permissions are enforced by Drupal core
 
-### Entity and field support
+## Entity and field support
 
 - Entities: nodes only in the initial release
 - Field types: aims to work with most standard field types. Rendering and comparison of complex field types may vary
 
-### Troubleshooting
+## Troubleshooting
 The link does not appear:
 - Ensure “Create new revision” is enabled on the content type
   - Verify field is selected in module settings for that content type
@@ -121,16 +121,16 @@ The link does not appear:
   - Only revisions where the field changed will display distinct entries
   - Use “Expand hidden values” to show duplicates/empties
 
-### Known limitations
+## Known limitations
 Nodes only (for now).
 - Very large revision histories may impact modal load time; consider editorial policies to limit excessive revisions
 - Sensitive data: the modal can expose past values; ensure roles and permissions reflect your compliance needs
 
-### Compatibility and updates
+## Compatibility and updates
 Supported: Drupal core 11.x.
 - Potential ports: Drupal 9/10 with minimal changes (not officially supported in this repository)
 - Follow semver in tagged releases when published
 
-### License
+## License
 This project is open source and licensed under the GNU General Public License, version 2 or later (GPL-2.0-or-later), the same license used by Drupal core.
 You should have received a copy of the GNU GPL along with this program. If not, see https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
