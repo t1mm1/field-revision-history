@@ -100,8 +100,6 @@ Notes:
   - Your role may lack the necessary revision permissions.
   - The module or field may be disabled in the module’s settings for that content type.
 
-ДОБАВИТЬ_СКРИН_ТУТ — Example of the field in the edit form after “Restore value” has been applied.
-
 ### How it works (high level)
 
 - The module augments node edit forms via form alters for supported fields
