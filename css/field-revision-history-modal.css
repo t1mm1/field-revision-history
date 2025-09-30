@@ -1,0 +1,13 @@
+.field-revision-history-modal {
+  min-width: 1060px;
+}
+
+.field-revision-history-modal *:focus,
+.field-revision-history-modal *:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.field-revision-history-modal {
+  overflow: hidden;
+}

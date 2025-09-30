@@ -1,0 +1,6 @@
+field_revision_history.settings:
+  title: 'Field revision history settings'
+  route_name: field_revision_history.settings
+  description: 'Administer field revision history settings.'
+  parent: system.admin_config_content
+  weight: 99

@@ -1,0 +1,63 @@
+.field-revision-history-table .field-revision-history-unchanged {
+  display: none;
+  opacity: 0;
+}
+
+.field-revision-history-table .field-revision-history-value {
+  width: 100%;
+}
+
+.field-revision-history-table .field-revision-history-value .field {
+  pointer-events: none;
+  cursor: default;
+}
+
+.field-revision-history-table .field-revision-history-value .field.field--type-image {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.field-revision-history-table .field-revision-history-value .field.field--type-image .field__item {
+  margin-right: 10px;
+}
+
+.field-revision-history-table .field-revision-history-operations {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.field-revision-history-table .field-revision-history-operations .dropbutton__item a {
+  white-space: nowrap;
+}
+
+.field-revision-history-table caption,
+.field-revision-history-date,
+.field-revision-history-message,
+.field-revision-history-empty {
+  font-size: 0.8rem;
+  opacity: .7;
+}
+
+.field-revision-history-table caption,
+.field-revision-history-date,
+.field-revision-history-message {
+  margin-bottom: 0.4rem;
+}
+
+.field-revision-history-table .field-revision-history-current .field-revision-history-value {
+  position: relative;
+}
+
+.field-revision-history-table .field-revision-history-current .field-revision-history-value::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: green;
+  z-index: 1;
+  pointer-events: none;
+}

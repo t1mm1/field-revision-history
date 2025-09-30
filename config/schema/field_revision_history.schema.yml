@@ -1,0 +1,27 @@
+field_revision_history.settings:
+  type: config_object
+  label: 'Field revision history settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Enable field revision history'
+    entity_types:
+      type: mapping
+      label: 'Entity types'
+      mapping:
+        '*' :
+          type: mapping
+          label: 'Bundles'
+          mapping:
+            '*' :
+              type: mapping
+              label: 'Bundle settings'
+              mapping:
+                enabled:
+                  type: boolean
+                  label: 'Enable bundle'
+                field_types:
+                  type: sequence
+                  label: 'Field types'
+                  sequence:
+                    type: string

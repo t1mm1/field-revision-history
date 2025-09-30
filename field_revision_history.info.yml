@@ -1,0 +1,9 @@
+name: 'Field Revision History'
+type: module
+description: 'Browse field changes by revision and restore any past value into the edit form.'
+core_version_requirement: ^11
+configure: field_revision_history.settings
+package: Custom
+dependencies:
+  - drupal:node
+  - drupal:field

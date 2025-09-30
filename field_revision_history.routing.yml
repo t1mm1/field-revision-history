@@ -1,0 +1,19 @@
+field_revision_history.field.view:
+  path: '/admin/field-revision-history/{entity_id}/{entity_type}/{field_name}/{langcode}/view'
+  defaults:
+    _controller: '\Drupal\field_revision_history\Controller\FieldViewController::fieldView'
+    _title: 'Field revision history values'
+  requirements:
+    _custom_access: '\Drupal\field_revision_history\Controller\FieldViewController::access'
+  options:
+    _format: 'drupal_ajax'
+
+field_revision_history.settings:
+  path: '/admin/config/content/field-revision-history'
+  defaults:
+    _form: '\Drupal\field_revision_history\Form\SettingsForm'
+    _title: 'Field revision history settings'
+  requirements:
+    _permission: 'administer field revision history configuration'
+  options:
+    _admin_route: TRUE

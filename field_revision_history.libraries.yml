@@ -1,0 +1,23 @@
+modal:
+  version: 1.x
+  css:
+    component:
+      css/field-revision-history-modal.css: { }
+  js:
+    js/field-revision-history-ajax.js: { }
+    js/field-revision-history-scroll-to.js: { }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupal.dialog
+
+table:
+  version: 1.x
+  css:
+    component:
+      css/field-revision-history-table.css: { }
+  js:
+    js/field-revision-history-table.js: {}
+  dependencies:
+    - core/drupal.dialog
+    - core/jquery

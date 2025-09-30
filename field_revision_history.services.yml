@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autoconfigure: true
+    autowire: true
+  field_revision_history.helper:
+    class: Drupal\field_revision_history\FieldRevisionHistoryHelper
+    arguments:
+      - '@date.formatter'
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+      - '@string_translation'
+
+  field_revision_history.element:
+    class: Drupal\field_revision_history\FieldRevisionHistoryElement
+
+  Drupal\field_revision_history\FieldRevisionHistoryHelper: '@field_revision_history.helper'
+  Drupal\field_revision_history\FieldRevisionHistoryElement: '@field_revision_history.element'
