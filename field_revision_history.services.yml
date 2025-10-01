@@ -8,11 +8,14 @@ services:
       - '@date.formatter'
       - '@entity_type.manager'
       - '@entity_field.manager'
-      - '@config.factory'
       - '@string_translation'
-
   field_revision_history.element:
     class: Drupal\field_revision_history\FieldRevisionHistoryElement
+  field_revision_history.settings:
+    class: Drupal\field_revision_history\FieldRevisionHistorySettings
+    arguments:
+      - '@config.factory'
 
   Drupal\field_revision_history\FieldRevisionHistoryHelper: '@field_revision_history.helper'
   Drupal\field_revision_history\FieldRevisionHistoryElement: '@field_revision_history.element'
+  Drupal\field_revision_history\FieldRevisionHistorySettings: '@field_revision_history.settings'

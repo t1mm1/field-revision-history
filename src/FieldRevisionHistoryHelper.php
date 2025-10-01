@@ -3,15 +3,13 @@
 namespace Drupal\field_revision_history;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
@@ -24,18 +22,9 @@ class FieldRevisionHistoryHelper {
   use StringTranslationTrait;
 
   /**
-   * Fields list of system fields array.
+   * Module settings.
    */
-  public array $available_system_fields = [
-    'title',
-  ];
-
-  /**
-   * Fields list of system fields array.
-   */
-  public array $unavailable_system_fields = [
-    'comment',
-  ];
+  public ImmutableConfig $settings;
 
   /**
    * The date formatter service.
@@ -59,14 +48,6 @@ class FieldRevisionHistoryHelper {
   protected EntityFieldManagerInterface $entityFieldManager;
 
   /**
-   * The config service.
-   *
-   * @var ConfigFactoryInterface
-   *   The config service.
-   */
-  protected ConfigFactoryInterface $configFactory;
-
-  /**
    * The translation manager.
    *
    * @var TranslationInterface
@@ -82,8 +63,6 @@ class FieldRevisionHistoryHelper {
    *   The entity type manager.
    * @param EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
-   * @param ConfigFactoryInterface $config_factory
-   *   The config factory manager.
    * @param TranslationInterface $string_translation
    *   The string translation service.
    */
@@ -91,13 +70,11 @@ class FieldRevisionHistoryHelper {
     DateFormatter $date_formatter,
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $entity_field_manager,
-    ConfigFactoryInterface $config_factory,
     TranslationInterface $string_translation,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
-    $this->configFactory = $config_factory;
     $this->stringTranslation = $string_translation;
   }
 
@@ -413,76 +390,6 @@ class FieldRevisionHistoryHelper {
     }
 
     return Url::fromRoute($route, $options);
-  }
-
-  /**
-   * Help function to check is the service enabled or not.
-   *
-   * @return bool
-   *   Enabled or not.
-   */
-  public function isServiceEnabled(): bool {
-    $settings = $this->configFactory->get('field_revision_history.settings');
-    $enabled = $settings->get('enabled') ?? FALSE;
-    if (!$enabled) {
-      return FALSE;
-    }
-
-    return TRUE;
-  }
-
-  /**
-   * Help function to check is the current entity bundle enabled or not.
-   *
-   * @param EntityInterface $entity
-   *   The source entity.
-   *
-   * @return bool
-   *   Enabled or not.
-   */
-  public function isEntityBundleEnabled(EntityInterface $entity): bool {
-    $settings = $this->configFactory->get('field_revision_history.settings');
-    $entity_types = $settings->get('entity_types') ?? FALSE;
-    $enabled = $entity_types[$entity->getEntityTypeId()][$entity->bundle()]['enabled'] ?? FALSE;
-    if (!$enabled) {
-      return FALSE;
-    }
-
-    return TRUE;
-  }
-
-  /**
-   * Help function to check is the current field enabled or not.
-   *
-   * @param EntityInterface $entity
-   *   The source entity.
-   * @param FieldDefinitionInterface $field_definition
-   *   The source entity.
-   *
-   * @return bool
-   *   Enabled or not.
-   */
-  public function isFieldEnabled(EntityInterface $entity, FieldDefinitionInterface $field_definition): bool {
-    $settings = $this->configFactory->get('field_revision_history.settings');
-    $entity_types = $settings->get('entity_types') ?? FALSE;
-    $field_name = $field_definition->getName();
-
-    if ($field_definition->getFieldStorageDefinition()->isBaseField() &&
-      !in_array($field_name, $this->available_system_fields)) {
-      return FALSE;
-    }
-
-    // Skip unavailable fields.
-    if (in_array($field_name, $this->unavailable_system_fields)) {
-      return FALSE;
-    }
-
-    // Check field.
-    if (!in_array($field_name, $entity_types[$entity->getEntityTypeId()][$entity->bundle()]['fields'])) {
-      return FALSE;
-    }
-
-    return TRUE;
   }
 
 }

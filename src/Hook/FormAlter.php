@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\field_revision_history\FieldRevisionHistoryElement;
 use Drupal\field_revision_history\FieldRevisionHistoryHelper;
+use Drupal\field_revision_history\FieldRevisionHistorySettings;
 use Drupal\node\NodeInterface;
 
 /**
@@ -26,6 +27,7 @@ class FormAlter {
     private ConfigFactoryInterface $configFactory,
     private FieldRevisionHistoryHelper $fieldRevisionHistoryHelper,
     private FieldRevisionHistoryElement $fieldRevisionHistoryElement,
+    private FieldRevisionHistorySettings $fieldRevisionHistorySettings,
   ) {
   }
 
@@ -35,7 +37,7 @@ class FormAlter {
   #[Hook('form_alter')]
   public function formAlter(array &$form, FormStateInterface $form_state, $form_id): void {
     // Check is the service available.
-    $service_enabled = $this->fieldRevisionHistoryHelper->isServiceEnabled();
+    $service_enabled = $this->fieldRevisionHistorySettings->isServiceEnabled();
     if (!$service_enabled) {
       return;
     }
@@ -109,14 +111,9 @@ class FormAlter {
     // Check all content contrib fields.
     foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
       // Check is current bundle enabled or not.
-      if (!$this->fieldRevisionHistoryHelper->isEntityBundleEnabled($entity)) {
-        continue;
-      }
-
       // Skip system fields like Author, Revision log, etc.
-      // Keep Title field in the list.
-      // Skip based fields.
-      if (!$this->fieldRevisionHistoryHelper->isFieldEnabled($entity, $field_definition)) {
+      // Keep Title field , skip based fields.
+      if (!$this->fieldRevisionHistorySettings->isEntityFieldEnabled($entity, $field_definition)) {
         continue;
       }
 
