@@ -8,6 +8,7 @@ services:
       - '@date.formatter'
       - '@entity_type.manager'
       - '@entity_field.manager'
+      - '@config.factory'
       - '@string_translation'
 
   field_revision_history.element:

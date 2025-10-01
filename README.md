@@ -110,7 +110,7 @@ Notes:
 ## Entity and field support
 
 - Entities: nodes only in the initial release
-- Field types: aims to work with most standard field types. Rendering and comparison of complex field types may vary
+- Fields: aims to work with most standard field types. Rendering and comparison of complex field types may vary
 
 ## Troubleshooting
 The link does not appear:

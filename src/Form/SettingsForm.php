@@ -26,6 +26,20 @@ class SettingsForm extends ConfigFormBase {
   ];
 
   /**
+   * Fields list of system fields array.
+   */
+  public array $available_system_fields = [
+    'title',
+  ];
+
+  /**
+   * Fields list of system fields array.
+   */
+  public array $unavailable_system_fields = [
+    'comment',
+  ];
+
+  /**
    * The entity type manager.
    *
    * @var EntityTypeManagerInterface
@@ -77,16 +91,6 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $config = $this->config('field_revision_history.settings');
 
-    $field_types_options = [
-      'text_with_summary' => $this->t('Text with summary (Example: text with editor)'),
-      'string' => $this->t('String (Example: texfield)'),
-      'string_long' => $this->t('String long (Example: simple textarea)'),
-      'image' => $this->t('Images'),
-      'file' => $this->t('Files'),
-      'link' => $this->t('Link'),
-      'entity_reference' => $this->t('Entity reference'),
-    ];
-
     $form['general'] = [
       '#type' => 'details',
       '#title' => $this->t('General'),
@@ -123,27 +127,42 @@ class SettingsForm extends ConfigFormBase {
           '#title' => $definition->getLabel(),
         ];
         foreach ($bundles as $bundle) {
-          $field_types_enabled = $entity_types[$entity_type][$bundle->id()]['enabled'] ?? 0;
-          $field_types_default = $entity_types[$entity_type][$bundle->id()]['field_types'] ?? [];
+          $enabled = $entity_types[$entity_type][$bundle->id()]['enabled'] ?? 0;
+          $fields = $entity_types[$entity_type][$bundle->id()]['fields'] ?? [];
+
+          $options = [];
+          $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type, $bundle->id());
+          foreach ($field_definitions as $field_name => $field_definition) {
+            // Skip based fields.
+            if ($field_definition->getFieldStorageDefinition()->isBaseField() && !in_array($field_name, $this->available_system_fields)) {
+              continue;
+            }
+
+            // Skip unavailable fields.
+            if (in_array($field_name, $this->unavailable_system_fields)) {
+              continue;
+            }
+            $options[$field_name] = $field_definition->getLabel();
+          }
 
           $form['entity_types'][$entity_type][$bundle->id()] = [
             '#type' => 'details',
             '#title' => $bundle->label(),
-            '#open' => $field_types_enabled ?? FALSE,
+            '#open' => $enabled ?? FALSE,
           ];
 
           $form['entity_types'][$entity_type][$bundle->id()]['enabled'] = [
             '#type' => 'checkbox',
             '#title' => $this->t('Enable for %label', ['%label' => $bundle->label()]),
-            '#default_value' => $field_types_enabled,
+            '#default_value' => $enabled,
           ];
 
-          $form['entity_types'][$entity_type][$bundle->id()]['field_types'] = [
+          $form['entity_types'][$entity_type][$bundle->id()]['fields'] = [
             '#type' => 'checkboxes',
-            '#title' => $this->t('Supported field types'),
-            '#options' => $field_types_options,
-            '#default_value' => $field_types_default,
-            '#description' => $this->t('Specify the field types for the "%type" content.', ['%type' => $bundle->label()]),
+            '#title' => $this->t('Supported fields'),
+            '#options' => $options,
+            '#default_value' => $fields,
+            '#description' => $this->t('Specify the fields for the "%type" content.', ['%type' => $bundle->label()]),
             '#states' => [
               'visible' => [
                 ':input[name="entity_types[' . $entity_type . '][' . $bundle->id() . '][enabled]"]' => ['checked' => TRUE],

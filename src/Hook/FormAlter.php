@@ -5,13 +5,13 @@ namespace Drupal\field_revision_history\Hook;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFormInterface;
-use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\field_revision_history\FieldRevisionHistoryElement;
+use Drupal\field_revision_history\FieldRevisionHistoryHelper;
 use Drupal\node\NodeInterface;
 
 /**
@@ -21,16 +21,10 @@ class FormAlter {
 
   use StringTranslationTrait;
 
-  /**
-   * Fields list of system fields array.
-   */
-  public array $available_system_fields = [
-    'title',
-  ];
-
   public function __construct(
     private RendererInterface $renderer,
     private ConfigFactoryInterface $configFactory,
+    private FieldRevisionHistoryHelper $fieldRevisionHistoryHelper,
     private FieldRevisionHistoryElement $fieldRevisionHistoryElement,
   ) {
   }
@@ -40,6 +34,13 @@ class FormAlter {
    */
   #[Hook('form_alter')]
   public function formAlter(array &$form, FormStateInterface $form_state, $form_id): void {
+    // Check is the service available.
+    $service_enabled = $this->fieldRevisionHistoryHelper->isServiceEnabled();
+    if (!$service_enabled) {
+      return;
+    }
+
+    // Check form type.
     if (!$form_state->getFormObject() instanceof EntityFormInterface) {
       return;
     }
@@ -69,12 +70,6 @@ class FormAlter {
     $is_revisionable = $entity_type->isRevisionable();
     // If entity doesnt support revisions.
     if (!$is_revisionable) {
-      return;
-    }
-
-    $settings = $this->configFactory->get('field_revision_history.settings');
-    $enabled = $settings->get('enabled') ?? FALSE;
-    if (!$enabled) {
       return;
     }
 
@@ -113,17 +108,15 @@ class FormAlter {
 
     // Check all content contrib fields.
     foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
-      // Skip system fields like Author, Revision log, etc.
-      // Keep Title field in the list.
-      if (!$field_definition instanceof FieldConfigInterface && !in_array($field_name, $this->available_system_fields)) {
+      // Check is current bundle enabled or not.
+      if (!$this->fieldRevisionHistoryHelper->isEntityBundleEnabled($entity)) {
         continue;
       }
 
-      // Check settings.
-      $entity_types = $settings->get('entity_types') ?? [];
-      $enabled = $entity_types[$entity->getEntityTypeId()][$entity->bundle()]['enabled'] ?? FALSE;
-      $field_types = $entity_types[$entity->getEntityTypeId()][$entity->bundle()]['field_types'] ?? [];
-      if (!$enabled || !in_array($field_definition->getType(), $field_types)) {
+      // Skip system fields like Author, Revision log, etc.
+      // Keep Title field in the list.
+      // Skip based fields.
+      if (!$this->fieldRevisionHistoryHelper->isFieldEnabled($entity, $field_definition)) {
         continue;
       }
 

@@ -20,8 +20,8 @@ field_revision_history.settings:
                 enabled:
                   type: boolean
                   label: 'Enable bundle'
-                field_types:
+                fields:
                   type: sequence
-                  label: 'Field types'
+                  label: 'Fields'
                   sequence:
                     type: string
