@@ -158,7 +158,9 @@ class FieldViewController extends ControllerBase implements ContainerInjectionIn
         if ($previous_field_value && json_encode($previous_field_value) == json_encode($current_field_value)) {
           $field_display = $this->fieldRevisionHistoryHelper->getPreviousValue();
           $current_field_unchanged = TRUE;
-          $unchanged_field_value = TRUE;
+          if (!$revision->isDefaultRevision()) {
+            $unchanged_field_value = TRUE;
+          }
         }
         else {
           $field_display = $current_field_value;
